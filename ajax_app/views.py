@@ -20,6 +20,15 @@ def save_book(request):
 		return HttpResponse('False')
 
 
+def delete_book(request, pk):
+	book = Book.objects.get(id=pk)
+	try: 
+		book.delete()
+		return HttpResponse('True')
+	except:
+		return HttpResponse('False')
+
+
 from .serializers import BookSerializer
 import json
 def list_book(request):

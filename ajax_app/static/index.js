@@ -38,19 +38,36 @@ function list(){
 			listBookDiv.innerHTML = ''
 			var table = document.createElement('TABLE');
 			var headerRow = table.insertRow(0);
-			headerRow.insertCell(0).innerHTML = '<h5>Name</h5>'
-			headerRow.insertCell(1).innerHTML = '<h5>Price</h5>'
-			headerRow.insertCell(2).innerHTML = '<h5>Name</h5>'
+			headerRow.insertCell(0).innerHTML = '<h5>Name</h5>';
+			headerRow.insertCell(1).innerHTML = '<h5>Price</h5>';
+			headerRow.insertCell(2).innerHTML = '<h5>Name</h5>';
+			headerRow.insertCell(3).innerHTML = '<h5>Delete</h5>';
 			for(var i=0; i<data.length; i++){
 				//creating rows/col objects
 				var row = table.insertRow(i+1);
-				var name = row.insertCell(0);
-				var price = row.insertCell(1);
-				var pages = row.insertCell(2);
-				//assigning HTML values 
-				name.innerHTML = data[i].name;
-				price.innerHTML = data[i].price;
-				pages.innerHTML = data[i].pages;
+				row.insertCell(0).innerHTML = data[i].name;
+				row.insertCell(1).innerHTML = data[i].price;
+				row.insertCell(2).innerHTML = data[i].pages;
+				var cross = row.insertCell(3);
+				cross.id = data[i].id;
+				cross.innerHTML = '&times;';
+				cross.className = 'text-center text-danger';
+				cross.style.cursor = 'pointer';
+				cross.onclick = function del(){
+					obj = this;
+					var id = this.id;
+					var req = new XMLHttpRequest;
+					var url = 'delete_book/'+id;
+					req.onreadystatechange = function(){
+						if(this.readyState == 4 && this.status == 200){
+							if(req.responseText == 'True'){
+								table.deleteRow(obj.parentNode.rowIndex);
+							}
+						}
+					}; 
+					req.open("GET", url, true)
+					req.send();
+				}
 			}
 			//assigning bootstrap class
 			table.className = 'table text-center table-striped';
@@ -60,6 +77,9 @@ function list(){
 	req.open("GET", url, true);
 	req.send();
 }
+
+
+
 
 // readyState	Holds the status of the XMLHttpRequest.
 // 0: request not initialized
